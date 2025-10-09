@@ -1,40 +1,53 @@
+
 <?php
-include_once 'ompay.php';
+/**
+ * Hosted Payment Example
+ *
+ * Demonstrates how to create a hosted payment order and perform a transaction using OMPAY PHP LIBRARY.
+ */
+session_start();
+require_once 'ompay.php';
 
-$driver = new OMPAY();
+// Initialize OMPAY driver
+$ompay = new OMPAY();
 
+// Create order data
 $order = new orderDataHosted();
-$order->receiptId = "INV_001";
+$order->receiptId = 'INV_001';
 $order->amount = 11.221;
-$order->description = "Test Order Description from PHP Driver";
+$order->description = 'Test Order Description from PHP Driver';
 $order->customerFields = new customerFields();
-$order->customerFields->name = "John";
-$order->customerFields->email = "john@doe.com";
-$order->customerFields->phone = "91234567";
-$orderId = $driver->CreateOrder($order)['data']['orderId'];
+$order->customerFields->name = 'John';
+$order->customerFields->email = 'john@doe.com';
+$order->customerFields->phone = '91234567';
 
-echo "ORDER ID: " . $orderId . "<br />";
+$orderResponse = $ompay->CreateOrder($order);
+$orderId = $orderResponse['data']['orderId'] ?? null;
 
+echo 'ORDER ID: ' . htmlspecialchars($orderId) . '<br />';
+
+// Prepare card data
 $cardData = new cardData();
-$cardData->cardNumber = "4012001037490006";
-$cardData->cardExpMonth = "12";
-$cardData->cardExpYear = "25";
-$cardData->cardCVV = "123";
+$cardData->cardNumber = '4012001037490006';
+$cardData->cardExpMonth = '12';
+$cardData->cardExpYear = '25';
+$cardData->cardCVV = '123';
 
-$encryptedCard = $driver->EncryptCard($cardData);
+$encryptedCard = $ompay->EncryptCard($cardData);
 
-$payment = $driver->PerformHostedTransaction($orderId, $encryptedCard, false);
+$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, false);
 
+echo '<pre>';
 print_r($payment);
+echo '</pre>';
 
 if (isset($payment['data']['redirectionData']['url'])) {
-    $OTPPage = $payment['data']['redirectionData']['url'];
-    //If customer needs to be redirected to OTP page, redirect them to $OTPPage URL.
-
-    echo "PAYMENT ID: " . $payment['data']['paymentId'] . "<br />";
-    echo "<a href='" . $OTPPage . "'>Click to redirect to OTP page. </a><br />";
+    $otpPage = $payment['data']['redirectionData']['url'];
+    echo 'PAYMENT ID: ' . htmlspecialchars($payment['data']['paymentId']) . '<br />';
+    echo '<a href="' . htmlspecialchars($otpPage) . '">Click to redirect to OTP page.</a><br />';
 }
-//At this point the customer should be redirected to the OTP page URL.
-//After completing the OTP, the customer will be redirected to the return URL specified in OMPAY_RETURN_URL constant in ompay.php file.
-//You can store the paymentId in session or database for later use.
-$_SESSION['paymentId'] = $payment['data']['paymentId'];
+
+// Store paymentId in session for later use
+if (isset($payment['data']['paymentId'])) {
+    $_SESSION['paymentId'] = $payment['data']['paymentId'];
+}

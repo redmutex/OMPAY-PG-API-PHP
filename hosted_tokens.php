@@ -1,66 +1,63 @@
+
 <?php
+/**
+ * Hosted Tokenized Transaction Example
+ *
+ * Demonstrates how to perform a tokenized transaction and list saved cards using OMPAY PHP LIBRARY.
+ */
+session_start();
+require_once 'ompay.php';
 
-include_once 'ompay.php';
+$ompay = new OMPAY();
 
-$driver = new OMPAY();
-
-//PERFORMING A TOKENIZED TRANSACTION USING SAVED CARD
-
+// Create order for tokenized transaction
 $order = new orderDataHosted();
-$order->receiptId = "INV_002";
+$order->receiptId = 'INV_002';
 $order->amount = 6.442;
-$order->description = "Test Order USING TOKEN from PHP Driver";
+$order->description = 'Test Order USING TOKEN from PHP Driver';
 $order->customerFields = new customerFields();
-$order->customerFields->name = "John";
-$order->customerFields->email = "john@doe.com";
-$order->customerFields->phone = "91234567";
-$orderId = $driver->CreateOrder($order)['data']['orderId'];
+$order->customerFields->name = 'John';
+$order->customerFields->email = 'john@doe.com';
+$order->customerFields->phone = '91234567';
 
-echo "ORDER ID: " . $orderId . "<br />";
+$orderResponse = $ompay->CreateOrder($order);
+$orderId = $orderResponse['data']['orderId'] ?? null;
+
+echo 'ORDER ID: ' . htmlspecialchars($orderId) . '<br />';
 
 $cardData = new cardDataWithToken();
-$cardData->digitalCardId = $_SESSION['digitalCardId'];
-$cardData->cardCVV = "123";
+$cardData->digitalCardId = $_SESSION['digitalCardId'] ?? '';
+$cardData->cardCVV = '123';
 
-$encryptedCard = $driver->EncryptCard($cardData);
+$encryptedCard = $ompay->EncryptCard($cardData);
 
-$payment = $driver->PerformHostedTransaction($orderId, $encryptedCard, true);
+$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, true);
 
-echo "PAYMENT ID: " . $payment['data']['paymentId'] . "<br />";
-$OTPPage = $payment['data']['redirectionData']['url'];
-echo "<a href='" . $OTPPage . "'>Click to redirect to OTP page. </a><br />";
-//If customer needs to be redirected to OTP page, redirect them to $OTPPage URL.
+echo 'PAYMENT ID: ' . htmlspecialchars($payment['data']['paymentId'] ?? '') . '<br />';
+$otpPage = $payment['data']['redirectionData']['url'] ?? '';
+if ($otpPage) {
+    echo '<a href="' . htmlspecialchars($otpPage) . '">Click to redirect to OTP page.</a><br />';
+}
 
-?>
-<h3>List of customer saved cards</h3>
-<table border="1">
-    <tr>
-        <th>digitalCardId</th>
-        <th>network</th>
-        <th>cardType</th>
-        <th>status</th>
-        <th>Masked Card</th>
-        <th>Created At</th>
-        <th>Modified At</th>
-        <th>Action</th>
-    </tr>
+// List of customer saved cards
+echo '<h3>List of customer saved cards</h3>';
+echo '<table border="1">';
+echo '<tr>';
+echo '<th>digitalCardId</th><th>network</th><th>cardType</th><th>status</th><th>Masked Card</th><th>Created At</th><th>Modified At</th><th>Action</th>';
+echo '</tr>';
 
-    <?php
-    $listOfCards = $driver->GetListOfCards($_SESSION['customerId']);
-    foreach ($listOfCards['data']['digitalCards'] as $card) {
-        echo "<tr>";
-        echo "<td>" . $card['digitalCardId'] . "</td>";
-        echo "<td>" . $card['network'] . "</td>";
-        echo "<td>" . $card['cardType'] . "</td>";
-        echo "<td>" . $card['status'] . "</td>";
-        echo "<td>**** **** **** " . $card['panLastFour'] . "</td>";
-        echo "<td>" . $card['createdAt'] . "</td>";
-        echo "<td>" . $card['updatedAt'] . "</td>";
-        echo "<td><a href='hosted_delete_token.php?token_id=" . $card['digitalCardId'] . "'>Delete</a></td>";
-        echo "</tr>";
-    }
-    ?>
-
-
-</table>
+$listOfCards = $ompay->GetListOfCards($_SESSION['customerId'] ?? '');
+foreach (($listOfCards['data']['digitalCards'] ?? []) as $card) {
+    echo '<tr>';
+    echo '<td>' . htmlspecialchars($card['digitalCardId']) . '</td>';
+    echo '<td>' . htmlspecialchars($card['network']) . '</td>';
+    echo '<td>' . htmlspecialchars($card['cardType']) . '</td>';
+    echo '<td>' . htmlspecialchars($card['status']) . '</td>';
+    echo '<td>**** **** **** ' . htmlspecialchars($card['panLastFour']) . '</td>';
+    echo '<td>' . htmlspecialchars($card['createdAt']) . '</td>';
+    echo '<td>' . htmlspecialchars($card['updatedAt']) . '</td>';
+    echo '<td><a href="hosted_delete_token.php?token_id=' . urlencode($card['digitalCardId']) . '">Delete</a></td>';
+    echo '</tr>';
+}
+echo '</table>';
 
