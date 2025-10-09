@@ -1,0 +1,1 @@
+<a href="hosted.php">Hosted Payment</a> | <a href="checkout.php">Checkout Payment</a>
