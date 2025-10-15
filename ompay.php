@@ -24,7 +24,7 @@ enum OMPAY_ENVIRONMENT
  *  - To use OMPAY merchant hosted payment mode, uncomment the below clientId and clientSecret values.
  *  - You can find these values in your OMPAY merchant dashboard.
  *  - Make sure to use the correct values for test and production modes.
- *
+ */
 define("OMPAY_CLIENT_ID", "68e4f71a560d6c2fc6aec66c");
 define("OMPAY_CLIENT_SECRET", "5U7VGujDKFRFxU5qyQi8tr8gc");
 define("OMPAY_CARD_ENCRYPTION_KEY", "7aee2f945fa177ff069447beb08ed0e5856e40616872c712fe4e6b9811247819");
@@ -33,9 +33,9 @@ define("OMPAY_CARD_ENCRYPTION_KEY", "7aee2f945fa177ff069447beb08ed0e5856e4061687
  *  - You can find these values in your OMPAY merchant dashboard.
  *  - Make sure to use the correct values for test and production modes.
  */
-define("OMPAY_CLIENT_ID", "");
-define("OMPAY_CLIENT_SECRET", "");
-define("OMPAY_CARD_ENCRYPTION_KEY", "NOT REQUIRED FOR CHECKOUT MODE");
+//define("OMPAY_CLIENT_ID", "");
+//define("OMPAY_CLIENT_SECRET", "");
+//define("OMPAY_CARD_ENCRYPTION_KEY", "NOT REQUIRED FOR CHECKOUT MODE");
 
 define("OMPAY_CARD_MERCHANT_DOMAIN", "https://ompay.com");
 define("OMPAY_ENVIORNMENT_MODE", OMPAY_ENVIRONMENT::TEST);
