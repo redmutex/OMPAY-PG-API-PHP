@@ -30,6 +30,10 @@ if (isset($paymentStatus['data']['securedCardDetails'])) {
     $_SESSION['digitalCardId'] = $digitalCardId;
     echo '<a href="hosted_tokens.php">Perform Tokenized Transaction</a><br />';
 } else {
+    echo 'STATUS RESPONSE:<br />';
+    echo '<pre>';
+    print_r($paymentStatus);
+    echo '</pre>';
     echo 'SECURED CARD DETAILS ARE NOT AVAILABLE.<br />';
 }
 
