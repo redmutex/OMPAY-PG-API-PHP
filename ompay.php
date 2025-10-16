@@ -48,7 +48,7 @@ define("OMPAY_HOSTED_RETURN_URL", "http://localhost:8888/hosted_ompay_return.php
 // OMPAY Configuration      (DO NOT CHANGE)
 define("OMPAY_CURRENCY", "OMR");
 define("OMPAY_HOSTED_BASE_URL", (OMPAY_ENVIORNMENT_MODE == OMPAY_ENVIRONMENT::TEST) ? "https://api.uat.gateway.ompay.com/nac/api/v1/merchant-host" : "https://api.gateway.ompay.com/nac/api/v1/merchant-host");
-define("OMPAY_CHECKOUT_BASE_URL", (OMPAY_ENVIORNMENT_MODE == OMPAY_ENVIRONMENT::TEST) ? "https://api.uat.gateway.ompay.com/" : "https://api.gateway.ompay.com/");
+define("OMPAY_CHECKOUT_BASE_URL", (OMPAY_ENVIORNMENT_MODE == OMPAY_ENVIRONMENT::TEST) ? "https://api.uat.gateway.ompay.com" : "https://api.gateway.ompay.com");
 define("OMPAY_CHECKOUT_URL", "https://pgadmin.uat.gateway.ompay.com/cpbs/pg?actionType=checkout&orderId={0}&&redirectUrl={1}&clientId={2}");
 define("OMPAY_ENDPOINT_ORDER", "/order");
 define("OMPAY_ENDPOINT_CHECKOUT_ORDER", "/nac/api/v1/pg/orders/create-checkout");
