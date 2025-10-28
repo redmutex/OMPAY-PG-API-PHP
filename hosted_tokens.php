@@ -12,7 +12,7 @@ $ompay = new OMPAY();
 
 // Create order for tokenized transaction
 $order = new orderDataHosted();
-$order->receiptId = 'INV_002';
+$order->receiptId = 'INV_' . microtime();
 $order->amount = 6.442;
 $order->description = 'Test Order USING TOKEN from PHP Driver';
 $order->customerFields = new customerFields();
@@ -25,13 +25,27 @@ $orderId = $orderResponse['data']['orderId'] ?? null;
 
 echo 'ORDER ID: ' . htmlspecialchars($orderId) . '<br />';
 
-$cardData = new cardDataWithToken();
+
+// Prepare card data - WITHOUT CVV EXAMPLE
+$cardData = new cardDataWithTokenWithoutCVV();
 $cardData->digitalCardId = $_SESSION['digitalCardId'] ?? '';
-$cardData->cardCVV = '123';
+$cvvFlag = true;
+
+// Prepare card data - WITH CVV EXAMPLE
+//$cardData = new cardDataWithToken();
+//$cardData->digitalCardId = $_SESSION['digitalCardId'] ?? '';
+//$cardData->cardCVV = '123';
+//$cvvFlag = false;
+
+echo "\nCARD DATA: ";
+print_r(json_encode($cardData));
 
 $encryptedCard = $ompay->EncryptCard($cardData);
 
-$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, true);
+$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, false, $cvvFlag, "token");
+
+echo "\nRESPONSE: ";
+print_r(json_encode($payment));
 
 echo 'PAYMENT ID: ' . htmlspecialchars($payment['data']['paymentId'] ?? '') . '<br />';
 $otpPage = $payment['data']['redirectionData']['url'] ?? '';
@@ -60,4 +74,3 @@ foreach (($listOfCards['data']['digitalCards'] ?? []) as $card) {
     echo '</tr>';
 }
 echo '</table>';
-

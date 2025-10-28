@@ -39,8 +39,7 @@ define("OMPAY_CARD_ENCRYPTION_KEY", "");
 
 define("OMPAY_CARD_MERCHANT_DOMAIN", "https://ompay.com");
 define("OMPAY_ENVIORNMENT_MODE", OMPAY_ENVIRONMENT::TEST);
-//Change this to OMPAY_UI_MODE::HOSTED if you want to use merchant hosted payment mode. Change it to checkout for OMPAY checkout payment mode.
-define("OMPAY_DEBUG_MODE", false); //Set to true to enable debug mode
+define("OMPAY_DEBUG_MODE", true); //Set to true to enable debug mode
 
 //If using checkout, change it to the URL where the customer will be redirected after completing the transaction. 
 define("OMPAY_HOSTED_RETURN_URL", "http://localhost:8888/hosted_ompay_return.php");
@@ -49,7 +48,7 @@ define("OMPAY_HOSTED_RETURN_URL", "http://localhost:8888/hosted_ompay_return.php
 define("OMPAY_CURRENCY", "OMR");
 define("OMPAY_HOSTED_BASE_URL", (OMPAY_ENVIORNMENT_MODE == OMPAY_ENVIRONMENT::TEST) ? "https://api.uat.gateway.ompay.com/nac/api/v1/merchant-host" : "https://api.gateway.ompay.com/nac/api/v1/merchant-host");
 define("OMPAY_CHECKOUT_BASE_URL", (OMPAY_ENVIORNMENT_MODE == OMPAY_ENVIRONMENT::TEST) ? "https://api.uat.gateway.ompay.com" : "https://api.gateway.ompay.com");
-define("OMPAY_CHECKOUT_URL", "https://pgadmin.uat.gateway.ompay.com/cpbs/pg?actionType=checkout&orderId={0}&&redirectUrl={1}&clientId={2}");
+define("OMPAY_CHECKOUT_URL", (OMPAY_ENVIORNMENT_MODE == OMPAY_ENVIRONMENT::TEST) ? "https://merchant.uat.gateway.ompay.com/cpbs/pg?actionType=checkout&orderId={0}&&redirectUrl={1}&clientId={2}" : "https://merchant.gateway.ompay.com/cpbs/pg?actionType=checkout&orderId={0}&&redirectUrl={1}&clientId={2}");
 define("OMPAY_ENDPOINT_ORDER", "/order");
 define("OMPAY_ENDPOINT_CHECKOUT_ORDER", "/nac/api/v1/pg/orders/create-checkout");
 define("OMPAY_ENDPOINT_CHECKOUT_STATUS", "/nac/api/v1/pg/orders/check-status?orderId=%s"); //"%s" will be replaced with orderId
@@ -127,7 +126,7 @@ class OMPAY
         return str_replace(["{0}", "{1}", "{2}"], [$orderId, urlencode($redirectUrl), OMPAY_CLIENT_ID], OMPAY_CHECKOUT_URL);
     }
 
-    public function PerformHostedTransaction($orderId, $encryptedCardData, $saveCard = false, $clientIPAddress = "", $clientBrowserFingerprint = "")
+    public function PerformHostedTransaction($orderId, $encryptedCardData, $secureCard = false, $cvvFlag = false, $paymentMode = "card", $clientIPAddress = "", $clientBrowserFingerprint = "")
     {
         $clientIPAddress = ($clientIPAddress == "") ? $_SERVER['REMOTE_ADDR'] : $clientIPAddress;
         $clientBrowserFingerprint = ($clientBrowserFingerprint == "") ? $this->getBrowserFingerprint() : $clientBrowserFingerprint;
@@ -138,9 +137,9 @@ class OMPAY
             "paymentMethod" => "card",
             "cardHolderName" => "ABCD XYZ",
             "redirectionUrl" => OMPAY_HOSTED_RETURN_URL,
-            "paymentMode" => $saveCard ? "token" : "card",
-            "secureCard" => true,
-            "cvvFlag" => false,
+            "paymentMode" => $paymentMode,
+            "secureCard" => $secureCard,
+            "cvvFlag" => $cvvFlag,
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $signature = $this->generateSignature(OMPAY_CLIENT_SECRET, OMPAY_ENDPOINT_TRANSACTION_INITIATE, $payLoad);
         $headers = [
@@ -408,13 +407,12 @@ class cardData
     public $cardCVV;
 }
 
-class cardDataWithToken
-{
-    public $digitalCardId;
-    public $cardCVV;
-}
-
 class cardDataWithTokenWithoutCVV
 {
     public $digitalCardId;
+}
+
+class cardDataWithToken extends cardDataWithTokenWithoutCVV
+{
+    public $cardCVV;
 }

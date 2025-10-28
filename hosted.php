@@ -13,13 +13,13 @@ $ompay = new OMPAY();
 
 // Create order data
 $order = new orderDataHosted();
-$order->receiptId = 'INV_001';
+$order->receiptId = 'INV_' . microtime();
 $order->amount = 11.221;
 $order->description = 'Test Order Description from PHP Driver';
 $order->customerFields = new customerFields();
 $order->customerFields->name = 'John';
 $order->customerFields->email = 'john@doe.com';
-$order->customerFields->phone = '91234567';
+$order->customerFields->phone = '12333211';
 
 $orderResponse = $ompay->CreateOrder($order);
 $orderId = $orderResponse['data']['orderId'] ?? null;
@@ -35,7 +35,7 @@ $cardData->cardCVV = '123';
 
 $encryptedCard = $ompay->EncryptCard($cardData);
 
-$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, false);
+$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, true, false, "card");
 
 echo '<pre>';
 print_r($payment);
