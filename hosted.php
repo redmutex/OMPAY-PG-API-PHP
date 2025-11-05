@@ -14,12 +14,12 @@ $ompay = new OMPAY();
 // Create order data
 $order = new orderDataHosted();
 $order->receiptId = 'INV_' . microtime();
-$order->amount = 1.119;
+$order->amount = 0.119;
 $order->description = 'Test Order Description from PHP Driver';
 $order->customerFields = new customerFields();
-$order->customerFields->name = 'John';
-$order->customerFields->email = 'john@doe.com';
-$order->customerFields->phone = '12333211';
+$order->customerFields->name = 'John Doe';
+$order->customerFields->email = 'john@doe11.com';
+$order->customerFields->phone = '77881122';
 
 $orderResponse = $ompay->CreateOrder($order);
 $orderId = $orderResponse['data']['orderId'] ?? null;
