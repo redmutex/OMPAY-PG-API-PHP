@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Hosted Payment Example
@@ -24,7 +23,7 @@ $order->customerFields->phone = '77881122';
 $orderResponse = $ompay->CreateOrder($order);
 $orderId = $orderResponse['data']['orderId'] ?? null;
 
-echo 'ORDER ID: ' . htmlspecialchars($orderId) . '<br />';
+echo 'ORDER ID: ' . $orderId . '<br />';
 
 // Prepare card data
 $cardData = new cardData();

@@ -33,7 +33,7 @@ define("OMPAY_CARD_ENCRYPTION_KEY", "");
 
 define("OMPAY_CARD_MERCHANT_DOMAIN", "https://ompay.com");
 define("OMPAY_ENVIORNMENT_MODE", OMPAY_ENVIRONMENT::TEST);
-define("OMPAY_DEBUG_MODE", false); //Set to true to enable debug mode
+define("OMPAY_DEBUG_MODE", true); //Set to true to enable debug mode
 
 //If using checkout, change it to the URL where the customer will be redirected after completing the transaction. 
 define("OMPAY_HOSTED_RETURN_URL", "http://localhost:8888/hosted_ompay_return.php");
@@ -310,6 +310,9 @@ class OMPAY
         $info = curl_getinfo($ch);
         if ($info['http_code'] != 200) {
             throw new Exception('Error: ' . $info['http_code'] . ' Response: ' . $response);
+        }
+        if (OMPAY_DEBUG_MODE) {
+            echo "RESPONSE: " . json_encode($response, true) . "\n";
         }
         return json_decode($response, true);
     }
