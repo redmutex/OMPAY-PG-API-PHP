@@ -8,17 +8,17 @@
 session_start();
 require_once 'ompay.php';
 
-$checkoutRedirectUrl = 'http://localhost:8888/checkout_redirect.php?orderId=%s'; // Change as needed
+$checkoutRedirectUrl = 'http://localhost:8888/checkout_redirect.php'; // Change as needed
 
 $ompay = new OMPAY();
 
 $orderData = new orderDataCheckout();
-$orderData->amount = 11.221;
+$orderData->amount = 0.221;
 $orderData->currency = 'OMR';
 $orderData->receiptId = 'INV_' . microtime();
 $orderData->description = 'Test Order Description from PHP Driver';
 $orderData->customerFields = new customerFields();
-$orderData->customerFields->name = 'John';
+$orderData->customerFields->name = $ompay->arabicToEnglish('عمر الزدجالي');
 $orderData->customerFields->email = 'john@doe.com';
 $orderData->customerFields->phone = '91234567';
 
@@ -34,5 +34,5 @@ if (($order['resCode'] ?? 0) != 200) {
 
 echo 'Order Id: ' . htmlspecialchars($order['orderId']) . '<br />';
 // Redirect link for customer
-$redirectLink = $ompay->GetCustomerRedirectionLink($order['orderId'], sprintf($checkoutRedirectUrl, $order['orderId']));
+$redirectLink = $ompay->GetCustomerRedirectionLink($order['orderId'], $checkoutRedirectUrl);
 echo '<a href="' . htmlspecialchars($redirectLink) . '">Click to redirect to OMPAY checkout page.</a><br />';

@@ -27,10 +27,10 @@ echo 'ORDER ID: ' . $orderId . '<br />';
 
 // Prepare card data
 $cardData = new cardData();
-$cardData->cardNumber = '4644260587945530';
+$cardData->cardNumber = '4644260582779231';
 $cardData->cardExpMonth = '02';
 $cardData->cardExpYear = '27';
-$cardData->cardCVV = '205';
+$cardData->cardCVV = '709';
 
 $encryptedCard = $ompay->EncryptCard($cardData);
 
