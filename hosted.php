@@ -4,7 +4,6 @@
  *
  * Demonstrates how to create a hosted payment order and perform a transaction using OMPAY PHP LIBRARY.
  */
-session_start();
 require_once 'ompay.php';
 
 // Initialize OMPAY driver

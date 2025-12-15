@@ -5,7 +5,6 @@
  *
  * Handles the redirect after checkout and displays order status.
  */
-session_start();
 require_once 'ompay.php';
 
 $paymentId = isset($_GET['paymentId']) ? stripslashes($_GET['paymentId']) : '';

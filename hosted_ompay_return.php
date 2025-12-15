@@ -5,7 +5,6 @@
  *
  * Handles the return from OMPAY after payment and displays/refunds status.
  */
-session_start();
 require_once 'ompay.php';
 
 $paymentId = $_SESSION['paymentId'] ?? '';

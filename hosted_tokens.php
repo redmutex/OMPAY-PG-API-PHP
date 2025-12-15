@@ -5,7 +5,6 @@
  *
  * Demonstrates how to perform a tokenized transaction and list saved cards using OMPAY PHP LIBRARY.
  */
-session_start();
 require_once 'ompay.php';
 
 $ompay = new OMPAY();

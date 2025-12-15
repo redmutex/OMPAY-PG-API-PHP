@@ -5,7 +5,6 @@
  *
  * Demonstrates how to create a checkout payment order and redirect using OMPAY PHP LIBRARY.
  */
-session_start();
 require_once 'ompay.php';
 
 $checkoutRedirectUrl = 'http://localhost:8888/checkout_redirect.php'; // Change as needed

@@ -26,7 +26,8 @@ enum OMPAY_ENVIRONMENT
  *  - Make sure to use the correct values for test and production modes.
  */
 define("OMPAY_CLIENT_ID", "");
-define("OMPAY_CLIENT_SECRET", "");
+//define("OMPAY_CLIENT_SECRET", "");   //hosted
+define("OMPAY_CLIENT_SECRET", "");     //checkout
 define("OMPAY_CARD_ENCRYPTION_KEY", "");
 
 ///////////////////////////////////////////////////////////////////////////
@@ -135,6 +136,7 @@ class OMPAY
             "paymentMode" => $paymentMode,
             "secureCard" => $secureCard,
             "cvvFlag" => $cvvFlag,
+            "isSkipCvvOnlyFlag" => false
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $signature = $this->generateSignature(OMPAY_CLIENT_SECRET, OMPAY_ENDPOINT_TRANSACTION_INITIATE, $payLoad);
         $headers = [
@@ -234,6 +236,12 @@ class OMPAY
         ];
         $response = $this->sendDeleteRequest(OMPAY_HOSTED_BASE_URL . sprintf(OMPAY_ENDPOINT_DELETE_TOKEN, $customerId, $digitalCardId), $headers);
         return $response;
+    }
+
+    public function VerifyWebhookSignature($message, $providedSignature, $clientSecret = OMPAY_CLIENT_SECRET)
+    {
+        $calculatedSignature = hash_hmac("sha256", $message, $clientSecret);
+        return hash_equals($calculatedSignature, $providedSignature);
     }
 
     private function generateSignature($clientSecret, $endpoint, $payLoad = "")
