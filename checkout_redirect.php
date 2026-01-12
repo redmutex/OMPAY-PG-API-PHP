@@ -7,14 +7,14 @@
  */
 require_once 'ompay.php';
 
-$paymentId = isset($_GET['paymentId']) ? stripslashes($_GET['paymentId']) : '';
-if (!$paymentId) {
-    echo 'No paymentId found in the request.';
+$orderId = isset($_GET['orderId']) ? stripslashes($_GET['orderId']) : '';
+if (!$orderId) {
+    echo 'No orderId found in the request.';
     exit;
 }
 
 $ompay = new OMPAY();
-$status = $ompay->CheckStatus($paymentId);
+$status = $ompay->CheckCheckoutStatus($orderId);
 
 if (($status['resCode'] ?? 0) != 200) {
     echo 'Error fetching order status: ' . htmlspecialchars($status['status'] ?? '') . ' : ' . htmlspecialchars($status['errMessage'] ?? '');

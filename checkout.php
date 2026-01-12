@@ -7,7 +7,7 @@
  */
 require_once 'ompay.php';
 
-$checkoutRedirectUrl = 'http://localhost:8888/checkout_redirect.php'; // Change as needed
+$checkoutRedirectUrl = 'http://localhost:8888/checkout_redirect.php?orderId='; // Change as needed
 
 $ompay = new OMPAY();
 
@@ -33,5 +33,5 @@ if (($order['resCode'] ?? 0) != 200) {
 
 echo 'Order Id: ' . htmlspecialchars($order['orderId']) . '<br />';
 // Redirect link for customer
-$redirectLink = $ompay->GetCustomerRedirectionLink($order['orderId'], $checkoutRedirectUrl);
+$redirectLink = $ompay->GetCustomerRedirectionLink($order['orderId'], $checkoutRedirectUrl . $order['orderId']);
 echo '<a href="' . htmlspecialchars($redirectLink) . '">Click to redirect to OMPAY checkout page.</a><br />';

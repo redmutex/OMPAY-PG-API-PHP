@@ -25,8 +25,8 @@ enum OMPAY_ENVIRONMENT
  *  - You can find these values in your OMPAY merchant dashboard.
  *  - Make sure to use the correct values for test and production modes.
  */
+
 define("OMPAY_CLIENT_ID", "");
-//define("OMPAY_CLIENT_SECRET", "");   //hosted
 define("OMPAY_CLIENT_SECRET", "");     //checkout
 define("OMPAY_CARD_ENCRYPTION_KEY", "");
 
@@ -121,7 +121,7 @@ class OMPAY
         return str_replace(["{0}", "{1}", "{2}"], [$orderId, urlencode($redirectUrl), OMPAY_CLIENT_ID], OMPAY_CHECKOUT_URL);
     }
 
-    public function PerformHostedTransaction($orderId, $encryptedCardData, $secureCard = false, $cvvFlag = false, $paymentMode = "card", $clientIPAddress = "", $clientBrowserFingerprint = "")
+    public function PerformHostedTransaction($orderId, $encryptedCardData, $secureCard = false, $skipCVVOnlyFlag = false, $paymentMode = "card", $skipCVVandOTP = false, $clientIPAddress = "", $clientBrowserFingerprint = "")
     {
         $clientIPAddress = ($clientIPAddress == "") ? $_SERVER['REMOTE_ADDR'] : $clientIPAddress;
         $clientBrowserFingerprint = ($clientBrowserFingerprint == "") ? $this->getBrowserFingerprint() : $clientBrowserFingerprint;
@@ -135,8 +135,8 @@ class OMPAY
             "apiType" => "hosted",
             "paymentMode" => $paymentMode,
             "secureCard" => $secureCard,
-            "cvvFlag" => $cvvFlag,
-            "isSkipCvvOnlyFlag" => false
+            "skipCVVOnlyFlag" => $skipCVVOnlyFlag,
+            "skipCVVandOTP" => $skipCVVandOTP
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $signature = $this->generateSignature(OMPAY_CLIENT_SECRET, OMPAY_ENDPOINT_TRANSACTION_INITIATE, $payLoad);
         $headers = [

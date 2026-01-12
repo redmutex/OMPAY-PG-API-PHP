@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Hosted Payment Example
  *
@@ -16,8 +17,8 @@ $order->amount = 0.119;
 $order->description = 'Test Order Description from PHP Driver';
 $order->customerFields = new customerFields();
 $order->customerFields->name = 'John Doe';
-$order->customerFields->email = 'john@doe11.com';
-$order->customerFields->phone = '77881122';
+$order->customerFields->email = 'omar.alzadjali@ompay.com';
+$order->customerFields->phone = '55443322';
 
 $orderResponse = $ompay->CreateOrder($order);
 $orderId = $orderResponse['data']['orderId'] ?? null;
@@ -33,7 +34,7 @@ $cardData->cardCVV = '709';
 
 $encryptedCard = $ompay->EncryptCard($cardData);
 
-$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, true, false, "card");
+$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, true, false, "card", false);
 
 echo '<pre>';
 print_r($payment);

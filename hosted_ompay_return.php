@@ -31,6 +31,7 @@ if (isset($paymentStatus['data']['securedCardDetails'])) {
 } else {
     echo 'STATUS RESPONSE:<br />';
     echo '<pre>';
+    //echo json_encode($paymentStatus);
     print_r($paymentStatus);
     echo '</pre>';
     echo 'SECURED CARD DETAILS ARE NOT AVAILABLE.<br />';

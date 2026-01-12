@@ -28,7 +28,6 @@ echo 'ORDER ID: ' . htmlspecialchars($orderId) . '<br />';
 // Prepare card data - WITHOUT CVV EXAMPLE
 $cardData = new cardDataWithTokenWithoutCVV();
 $cardData->digitalCardId = $_SESSION['digitalCardId'] ?? '';
-$cvvFlag = true;
 
 // Prepare card data - WITH CVV EXAMPLE
 //$cardData = new cardDataWithToken();
@@ -41,15 +40,20 @@ print_r(json_encode($cardData));
 
 $encryptedCard = $ompay->EncryptCard($cardData);
 
-$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, false, $cvvFlag, "token");
+$payment = $ompay->PerformHostedTransaction($orderId, $encryptedCard, false, true, "token", false);
 
 echo "\nRESPONSE: ";
-print_r(json_encode($payment));
+print_r($payment);
 
-echo 'PAYMENT ID: ' . htmlspecialchars($payment['data']['paymentId'] ?? '') . '<br />';
-$otpPage = $payment['data']['redirectionData']['url'] ?? '';
-if ($otpPage) {
+echo 'PAYMENT ID: ' . htmlspecialchars($payment['data']['paymentId'] ?? '') . ' <br /> ';
+
+if (isset($payment['data']['redirectionData']['url'])) {
+    $otpPage = $payment['data']['redirectionData']['url'];
+    echo 'PAYMENT ID: ' . htmlspecialchars($payment['data']['paymentId']) . '<br />';
     echo '<a href="' . htmlspecialchars($otpPage) . '">Click to redirect to OTP page.</a><br />';
+} else if (isset($payment['data']['redirectionData']['formData'])) {
+    echo $payment['data']['redirectionData']['formData'];
+    echo " <button type='submit' form='threeds_redirect' value='Submit'>Click to redirect to OTP page.</button> ";
 }
 
 // List of customer saved cards
