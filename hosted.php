@@ -12,7 +12,7 @@ $ompay = new OMPAY();
 
 // Create order data
 $order = new orderDataHosted();
-$order->receiptId = 'INV_' . microtime();
+$order->receiptId = 'INV_' . mt_rand(10000000000000, 99999999999999);
 $order->amount = 0.119;
 $order->description = 'Test Order Description from PHP Driver';
 $order->customerFields = new customerFields();

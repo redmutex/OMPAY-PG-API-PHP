@@ -11,7 +11,7 @@ $ompay = new OMPAY();
 
 // Create order for tokenized transaction
 $order = new orderDataHosted();
-$order->receiptId = 'INV_' . microtime();
+$order->receiptId = 'INV_' . mt_rand(10000000000000, 99999999999999);
 $order->amount = 1.442;
 $order->description = 'Test Order USING TOKEN from PHP Driver';
 $order->customerFields = new customerFields();

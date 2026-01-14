@@ -14,7 +14,7 @@ $ompay = new OMPAY();
 $orderData = new orderDataCheckout();
 $orderData->amount = 0.221;
 $orderData->currency = 'OMR';
-$orderData->receiptId = 'INV_' . microtime();
+$orderData->receiptId = 'INV_' . mt_rand(10000000000000, 99999999999999);
 $orderData->description = 'Test Order Description from PHP Driver';
 $orderData->customerFields = new customerFields();
 $orderData->customerFields->name = $ompay->arabicToEnglish('عمر الزدجالي');
@@ -22,7 +22,7 @@ $orderData->customerFields->email = 'john@doe.com';
 $orderData->customerFields->phone = '91234567';
 
 // Unique transaction reference
-$orderData->curn = 'TRX_' . microtime();
+$orderData->curn = 'TRX_' . mt_rand(10000000000000, 99999999999999);
 
 $order = $ompay->CreateOrder($orderData);
 
