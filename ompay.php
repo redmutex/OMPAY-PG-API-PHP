@@ -27,7 +27,7 @@ enum OMPAY_ENVIRONMENT
  */
 
 define("OMPAY_CLIENT_ID", "");
-define("OMPAY_CLIENT_SECRET", "");     //checkout
+define("OMPAY_CLIENT_SECRET", "");
 define("OMPAY_CARD_ENCRYPTION_KEY", "");
 
 ///////////////////////////////////////////////////////////////////////////
@@ -314,7 +314,6 @@ class OMPAY
         if (curl_errno($ch)) {
             throw new Exception('Request Error: ' . curl_error($ch));
         }
-        curl_close($ch);
         $info = curl_getinfo($ch);
         if ($info['http_code'] != 200) {
             throw new Exception('Error: ' . $info['http_code'] . ' Response: ' . $response);
@@ -339,9 +338,11 @@ class OMPAY
         if (curl_errno($ch)) {
             throw new Exception('Request Error: ' . curl_error($ch));
         }
-        curl_close($ch);
         if ($info['http_code'] != 200) {
             throw new Exception('Error: ' . $info['http_code'] . ' Response: ' . $response);
+        }
+        if (OMPAY_DEBUG_MODE) {
+            echo "RESPONSE: " . json_encode($response, true) . "\n";
         }
         return json_decode($response, true);
     }
